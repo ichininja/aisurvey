@@ -3,11 +3,48 @@
 <head>
   <title>Hindi Voice Survey</title>
   <script src="https://unpkg.com/vosk-browser/dist/bundle.js"></script>
-  <script src="vosk.js" defer></script>
 </head>
-<body onload="loadModel()">
+<body>
   <h2>🎤 बोलिए और देखें</h2>
-  <button onclick="startVoskMic()">🎙️ बोलना शुरू करें</button>
+  <button onclick="startRecognition()">🎙️ बोलना शुरू करें</button>
   <p id="output">आपका जवाब यहां दिखेगा...</p>
+
+  <script>
+    let model;
+    let recognizer;
+
+    async function loadModel() {
+      model = await Vosk.createModel('model/');
+      recognizer = model.createRecognizer();
+    }
+
+    async function startRecognition() {
+      if (!recognizer) {
+        alert("Model not loaded yet!");
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const audioContext = new AudioContext();
+      const source = audioContext.createMediaStreamSource(stream);
+      const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+      recognizer.setWords(true);
+
+      processor.onaudioprocess = (event) => {
+        const inputData = event.inputBuffer.getChannelData(0);
+        recognizer.acceptWaveform(inputData);
+        const result = recognizer.result();
+        if (result && result.text) {
+          document.getElementById('output').innerText = result.text;
+        }
+      };
+
+      source.connect(processor);
+      processor.connect(audioContext.destination);
+    }
+
+    loadModel();
+  </script>
 </body>
 </html>
