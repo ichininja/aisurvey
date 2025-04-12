@@ -14,7 +14,7 @@
     let recognizer;
 
     async function loadModel() {
-      model = await Vosk.createModel('model/');
+      model = await Vosk.createModel('model');
       recognizer = model.createRecognizer();
     }
 
