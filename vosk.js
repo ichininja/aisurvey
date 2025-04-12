@@ -2,7 +2,7 @@ let recognizer;
 let model;
 
 async function loadModel() {
-  const vosk = await Vosk.createModel('model');
+  const vosk = await Vosk.createModel('model/');
   model = vosk;
   recognizer = model.createRecognizer();
 }
