@@ -1,24 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Voice Survey</title>
+  <title>Hindi Voice Survey</title>
+  <script src="https://unpkg.com/vosk-browser/dist/worker.min.js"></script>
+  <script src="vosk.js" defer></script>
 </head>
-<body>
-  <h2>🎙️ Voice Survey</h2>
-  <button onclick="startRecognition()">🎤 Start Speaking</button>
-  <p id="output">Your response will appear here...</p>
-
-  <script>
-    const output = document.getElementById('output');
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-IN';
-    recognition.onresult = (event) => {
-      output.innerText = event.results[0][0].transcript;
-    };
-
-    function startRecognition() {
-      recognition.start();
-    }
-  </script>
+<body onload="loadModel()">
+  <h2>🎤 बोलिए और देखें</h2>
+  <button onclick="startVoskMic()">🎙️ बोलना शुरू करें</button>
+  <p id="output">आपका जवाब यहां दिखेगा...</p>
 </body>
 </html>
